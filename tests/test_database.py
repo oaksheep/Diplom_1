@@ -1,6 +1,7 @@
 import pytest
 from unittest import mock
 from praktikum.database import Database
+from praktikum.ingredient import Ingredient
 
 
 class TestDatabase:
@@ -19,31 +20,30 @@ class TestDatabase:
 
         assert database.available_ingredients() == mock_ingredients
 
-    @pytest.mark.parametrize("bun_name, bun_price", [
-        ("Moon_bun", 1000),
-        ("Sun_bun", 1200),
-        ("Mars_bun", 1300)
+    @pytest.mark.parametrize("i, bun_name, bun_price", [
+        (0, "black bun", 100),
+        (1, "white bun", 200),
+        (2, "red bun", 300)
     ])
-    def test_available_buns_parameterization(self, bun_name, bun_price):
+    def test_available_buns_parameterization(self, i, bun_name, bun_price):
         database = Database()
         buns = database.available_buns()
+        assert buns[i].get_name() == bun_name
+        assert buns[i].get_price() == bun_price
 
-        for bun in buns:
-            if bun.name == bun_name:
-                assert bun.price == bun_price
 
-    @pytest.mark.parametrize("sous, ingredient_name, ingredient_price", [
-        ("sauce", "Sweet_sauce", 1010),
-        ("sauce", "Bitter_sauce", 1020),
-        ("sauce", "Sour_sauce", 1030),
-        ("filling", "Meatball", 1110),
-        ("filling", "Prosciutto", 1120),
-        ("filling", "Sausage", 1130)
+    @pytest.mark.parametrize("i, sous, ingredient_name, ingredient_price", [
+        (0, "SAUCE", "hot sauce", 100),
+        (1, "SAUCE", "sour cream", 200),
+        (2, "SAUCE", "chili sauce", 300),
+        (3, "FILLING", "cutlet", 100),
+        (4, "FILLING", "dinosaur", 200),
+        (5, "FILLING", "sausage", 300)
     ])
-    def test_available_ingredients_parameterization(self, sous, ingredient_name, ingredient_price):
+    def test_available_ingredients_parameterization(self, i, sous, ingredient_name, ingredient_price):
         database = Database()
         ingredients = database.available_ingredients()
+        assert ingredients[i].get_name() == ingredient_name
+        assert ingredients[i].get_type() == sous
+        assert ingredients[i].get_price() == ingredient_price
 
-        for ingredient in ingredients:
-            if ingredient.type == sous and ingredient.name == ingredient_name:
-                assert ingredient.price == ingredient_price
